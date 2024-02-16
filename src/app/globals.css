@@ -1,0 +1,17 @@
+:root{
+    --blanco: #ffffff;
+    --color-primario: #2721da;
+    --color-secundario: #4705ab;
+    --color-primario-oscuro: #080487;
+    --color-secundario-oscuro: #2d0f8f;
+}
+
+*{
+    margin: 0;
+    box-sizing: border-box;
+    font-family: Blinker, serif;
+}
+
+* a{
+    text-decoration: none;
+}

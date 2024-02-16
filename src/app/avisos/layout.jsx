@@ -1,11 +1,11 @@
 export const metadata = {
     charset: "UTF-8",
-    title: "Chats",
-    description: "Interfaz de los chats",
+    title: "Avisos",
+    description: "Interfaz de avisos",
     script: "https://kit.fontawesome.com/88239f68d2.js"
 };
 
-export default function ChatsLayout({ children }) {
+export default function AvisosLayout({ children }) {
     return (
         <>
             {children}

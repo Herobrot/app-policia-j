@@ -1,9 +1,15 @@
-import "./menu.css"
+import "./chats.css"
+import Footer from "../components/Footer"
 
 export default function Menu() {
     return (
-        <main>
-            
-        </main>
+        <>
+            <main>
+                <div id="contenedorChats">
+
+                </div>
+            </main>
+            <Footer />
+        </>
     )
 }

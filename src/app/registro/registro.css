@@ -1,0 +1,158 @@
+main{
+    display: flex;
+    height: 100svh;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(206, 62, 62);
+}
+
+main > button{
+    background: none;
+    border: none;
+    display: block;
+    text-align: center;
+    color: var(--color-secundario-oscuro);
+    font-size: 2.5em;
+    position: absolute;
+    top: 10.5%;
+    left: 11.5%;
+}
+
+div#contenedorRegistro{
+    display: flex;
+    width: 85%;
+    height: fit-content;
+    background-color: rgb(16, 214, 148);
+    text-align: center;
+}
+
+div#contenedorRegistro > div#registro > h1, h2{
+    color: var(--blanco)
+}
+
+div#contenedorRegistro > div#registro{
+    padding-block: 5%;
+    background: var(--color-primario);
+    margin: 15% 5% 5% 5%;
+    width: 90%;
+}
+
+div#registro > div#contenedorInputs > input{
+    margin-block: 5%;
+    font-size: 1.4em;
+}
+
+div#registro > div#contenedorInputs{
+    margin-top: 3%;
+}
+
+div#registro > div#contenedorInputs > input::placeholder{
+    color: gray;
+}
+
+div#registro > div#contenedorInputs > button{
+    margin-block: 5%;
+    font-size: 1.8em;
+    border: 3px solid var(--color-secundario-oscuro);
+    border-radius: 50px;
+    background: var(--color-secundario);
+    color: var(--blanco);
+}
+
+
+#btnRegistrarse {
+  align-items: center;
+  background-color: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: .25rem;
+  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+  box-sizing: border-box;
+  color: rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: -apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 1.2em;
+  font-weight: 600;
+  justify-content: center;
+  line-height: 1.25;
+  margin: 0;
+  min-height: 3rem;
+  padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+  position: relative;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  width: auto;
+  transition: border-color 250ms, box-shadow 250ms, color 250ms, transform 250ms, 
+            background-color 250ms;
+}
+
+#btnRegistrarse:hover{
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+  color: rgba(0, 0, 0, 0.65);
+  transform: translate(-1px);
+}
+
+#btnRegistrarse:active {
+  background-color: #F0F0F1;
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
+  color: rgba(0, 0, 0, 0.65);
+  transform: translateY(0);
+}
+
+.swal-popup{
+    width: 80%;
+    background: rgb(238, 238, 238);
+}
+
+.swal-title{
+    font-family: 'Blinker', serif;
+    color:black;
+    font-weight: bold;
+    font-size: 150%;
+}
+
+.swal-html{
+    font-family: 'Blinker', serif;
+    color:black;
+    font-weight: 700;
+    font-size: 120%;
+}
+
+.swal-actions{
+    justify-content: space-around;
+    width: 100%;
+}
+
+.swal-X, .swal-Check, .swal-Si, .swal-No{
+    border: 0;
+    color: aliceblue;
+    border-radius: 100%;
+    width: 15vw;
+    height: 15vw;
+}
+
+.swal-X{    
+    font-size: 300%;
+    background: rgb(178, 13, 13);
+}
+
+.swal-Check{
+    font-size: 265%;
+    background: rgb(15, 15, 192);
+}
+
+.swal-No{
+    background: rgb(178, 13, 13);
+    font-size: 150%;
+}
+
+.swal-Si{
+    background: rgb(15, 15, 192);
+    font-size: 150%;
+}

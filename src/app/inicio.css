@@ -1,0 +1,55 @@
+main{
+    display: flex;
+    height: 100svh;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(206, 62, 62);
+}
+
+div#contenedorLogin{
+    display: flex;
+    width: 75%;
+    height: fit-content;
+    background-color: rgb(16, 214, 148);
+    text-align: center;
+}
+
+div#contenedorLogin > div#login > h1, h2{
+    color: var(--blanco)
+}
+
+div#contenedorLogin > div#login{
+    padding-block: 5%;
+    background: var(--color-primario);
+    margin: 15% 5% 5% 5%;
+    width: 90%;
+}
+
+div#login > div#contenidoInputs > input{
+    margin-block: 5%;
+    font-size: 1.4em;
+}
+
+div#login > div#contenidoInputs{
+    margin-top: 3%;
+}
+
+div#login > div#contenidoInputs > input::placeholder{
+    color: gray;
+}
+
+div#login > div#contenidoInputs > button{
+    margin-block: 5%;
+    font-size: 1.8em;
+    border: 3px solid var(--color-secundario-oscuro);
+    border-radius: 50px;
+    background: var(--color-secundario);
+    color: var(--blanco);
+}
+
+div#login > a{
+    color: var(--blanco);
+    display: block;
+    padding: 1%;
+}

@@ -23,7 +23,6 @@ export default function Registro() {
             confirmButtonColor: "blue",
             confirmButtonText:'<i class="fa-solid fa-check"></i>',
             buttonsStyling: false,
-            showConfirmButton: false,
             customClass: {
                 title: "swal-title",
                 popup: "swal-popup",

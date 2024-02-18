@@ -6,12 +6,13 @@ import Swal from "sweetalert2";
 import Link from "next/link";
 
 export default function Inicio() {
-    const [credentials, setCredentials] = useState({ badgeNumber: '', password: '' });
+    const [badgeNumber, setBadgeNumber] = useState('');
+    const [password, setPassword] = useState('');
     const handleInputChangeBadge = (e) => {
-        setCredentials({badgeNumber: e.target.value})
+        setBadgeNumber({badgeNumber: e.target.value})
     }
     const handleInputChangePassword = (e) => {
-        setCredentials({password: e.target.value})
+        setPassword({password: e.target.value})
     }
 
     const login = () =>{
@@ -25,18 +26,18 @@ export default function Inicio() {
             }
         })
         
-        fetch('https://api-police-j.onrender.com/users/user', {
+        try{
+            console.log({badgeNumber, password});
+            console.log(JSON.stringify({badgeNumber, password}));
+            fetch('https://api-police-j.onrender.com/users/user', {
             method:'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(
                 {
-                    name: '',
-                    lastName: '',
-                    role: '',
-                    badgeNumber: credentials.badgeNumber,
-                    password: credentials.password
+                    badgeNumber: badgeNumber,
+                    password: password
                 }
             )
         })
@@ -44,6 +45,7 @@ export default function Inicio() {
             if(response.ok){
                 Swal.close();
                 const data = await response.json();
+                console.log(data);
                 saveAuthData(data.token, data.userFound._id);
                 window.location = '/chats';
             } else {
@@ -54,14 +56,10 @@ export default function Inicio() {
                 })
             }
         })
-        .catch(error => {
-            console.error('Error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Hubo un problema con la petición.',
-            });
-        });
+        }
+        catch(error){
+            console.log(error);
+        }
     }
     return(
         <main>

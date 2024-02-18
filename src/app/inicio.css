@@ -9,7 +9,7 @@ main{
 
 div#contenedorLogin{
     display: flex;
-    width: 75%;
+    width: 90%;
     height: fit-content;
     background-color: rgb(16, 214, 148);
     text-align: center;
@@ -22,7 +22,7 @@ div#contenedorLogin > div#login > h1, h2{
 div#contenedorLogin > div#login{
     padding-block: 5%;
     background: var(--color-primario);
-    margin: 15% 5% 5% 5%;
+    margin: 5%;
     width: 90%;
 }
 

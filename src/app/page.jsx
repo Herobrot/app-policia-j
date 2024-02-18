@@ -15,7 +15,17 @@ export default function Inicio() {
     }
 
     const login = () =>{
-        fetch(process.env.NEXT_PUBLIC_API_URL_USERS+'/user', {
+        Swal.fire({
+            title: 'Cargando...',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading()
+            }
+        })
+        
+        fetch('https://api-police-j.onrender.com/users/user', {
             method:'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -30,31 +40,18 @@ export default function Inicio() {
                 }
             )
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                clearAuthData();
+        .then(async (response) => {
+            if(response.ok){
+                Swal.close();
+                const data = await response.json();
+                saveAuthData(data.token, data.userFound._id);
+                window.location = '/chats';
+            } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Inicio de sesión fallido.',
-                });
-            } else {
-                console.log(data);
-                saveAuthData(data.token, data.user._id);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Éxito',
-                    text: 'Inicio de sesión exitoso.',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location = "/chats";
-                    }
-
-                    if(result.isDismissed){
-                        window.location = "/chats";
-                    }
-                });                
+                    text: 'El usuario no existe o la contraseña es incorrecta.',                
+                })
             }
         })
         .catch(error => {

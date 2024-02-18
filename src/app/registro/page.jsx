@@ -6,7 +6,6 @@ import { useState } from "react";
 import { saveAuthData } from "../../../Token";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { Suspense } from "react";
 
 export default function Registro() {
     const [name, setName] = useState("");
@@ -20,7 +19,7 @@ export default function Registro() {
             icon: "error",
             title: String(titulo),
             text: String(texto),
-            showFonfirmButton: true,
+            showConfirmButton: true,
             confirmButtonColor: "blue",
             confirmButtonText:'<i class="fa-solid fa-check"></i>',
             buttonsStyling: false,
@@ -128,77 +127,67 @@ export default function Registro() {
                     denyButton: "swal-Check"
                 }
             }).then(async (result) => {
-                if(result.isDenied){
-                    try{                
-                        Swal.fire({
-                            title: "Cargando...",
-                            allowOutsideClick: false,
-                            showConfirmButton: false,
-                            allowEscapeKey: false,
-                            didOpen: async () => {
-                                Swal.showLoading()
-                                const item = { 
-                                    name: name,
-                                    lastName: lastName,
-                                    badgeNumber: badgeNumber,
-                                    password: badgeNumber, 
-                                    role: role
+                if(result.isDenied){  
+                    Swal.fire({
+                        title: "Cargando...",
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading()                            
+                        }
+                    })
+                    const item = { 
+                        name: name,
+                        lastName: lastName,
+                        badgeNumber: badgeNumber,
+                        password: badgeNumber, 
+                        role: role
+                    }
+                    try {
+                        fetch("https://api-police-j.onrender.com/users", {
+                            method: "POST",
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(item)})
+                            .then(async (res) => {                                            
+                                if (res.ok) {
+                                    Swal.close();
+                                    const result = await res.json();
+                                    console.log(result);
+                                    saveAuthData(result.token,result.newUser._id)
+                                    Swal.fire({
+                                        title: "¡Datos confirmados!",
+                                        text: "¡Listo!, ya tiene una cuenta como " + role,
+                                        showConfirmButton: true,
+                                        confirmButtonColor: "blue",
+                                        confirmButtonText:'<i class="fa-solid fa-check"></i>',
+                                        buttonsStyling: false,                        
+                                        customClass: {
+                                            htmlContainer: "swal-html",
+                                            title: "swal-title",
+                                            popup: "swal-popup",
+                                            confirmButton: "swal-Check"
+                                        } 
+                                    }).then((result) => {
+                                        if(result.isConfirmed || result.isDismissed){
+                                            window.location = "/perfil"
+                                        }
+                                    })
                                 }
-                                try {
-                                    const response = await fetch(process.env.NEXT_PUBLIC_API_URL_USERS, {
-                                        method: "POST",
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                        },
-                                        body: JSON.stringify(item)})
-                                        .then(async (res) => {                                            
-                                            if (res.ok) {
-                                                Swal.close();
-                                                //EL ERROR ESTA EN EL ENV 
-                                                //https://stackoverflow.com/questions/73359274/syntaxerror-unexpected-token-doctype-is-not-valid-json
-                                                const result = await res.json();
-                                                console.log(result);
-                                                console.log(result.result._id);
-                                                saveAuthData(result.token,result.result._id)
-                                                Swal.fire({
-                                                    title: "¡Datos confirmados!",
-                                                    text: "¡Listo!, ya tiene una cuenta como " + role,
-                                                    showConfirmButton: true,
-                                                    confirmButtonColor: "blue",
-                                                    confirmButtonText:'<i class="fa-solid fa-check"></i>',
-                                                    buttonsStyling: false,                        
-                                                    customClass: {
-                                                        title: "swal-title",
-                                                        popup: "swal-popup",
-                                                        confirmButton: "swal-Check"
-                                                    } 
-                                                }).then((result) => {
-                                                    if(result.isConfirmed || result.isDismissed){
-                                                        window.location = "/perfil"
-                                                    }
-                                                })
-                                            }
-                                            else{
-                                                Swal.fire({
-                                                    icon: "error",
-                                                    title: "Ha sucedido un error al subir los datos",
-                                                    showConfirmButton: false
-                                                });
-                                            }
-                                        })
-                                } catch (error) {
-                                    
+                                else{
+                                    Swal.fire({
+                                        icon: "error",
+                                        title: "Ha sucedido un error al subir los datos",
+                                        showConfirmButton: false
+                                    });
+                                    console.log(res.status)
                                 }
+                            })
+                    } catch (error) {
                             
-                            }
-                        })
-                                  
-
-                        } catch(err){
-                            Swal.fire({
-                                title: "Ha sucedido un error al subir los datos"
-                            });
-                        }         
+                    }         
                 }
             })
         }

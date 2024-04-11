@@ -1,0 +1,76 @@
+footer{
+    display: flex;
+    width: 100%;
+    height: 14svh;
+    position: absolute;
+    background: rgb(2,0,36);
+    background: -moz-linear-gradient(rgba(2,0,36,0) 0%, rgba(224,224,224,1) 30%);
+    background: -webkit-linear-gradient(rgba(2,0,36,0) 0%, rgba(224,224,224,1) 30%);
+    background: linear-gradient(rgba(2,0,36,0) 0%, rgba(224,224,224,1) 30%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#020024",endColorstr="#e0e0e0",GradientType=1);
+    bottom: 0;
+}
+
+div#contenedorLinks{
+    position: absolute;
+    display: flex;
+    height: 8svh;
+    width: 100%;
+    bottom: 0;
+    background: rgb(224, 224, 224)
+}
+
+div#contenedorLinks > div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 34%;
+}
+
+div#contenedorLinks > div > a.inactive{
+    background: rgb(224, 224, 224);
+}
+
+div#contenedorLinks > div#chats{
+    -webkit-border-bottom-right-radius: 100px;
+    -moz-border-radius-bottomright: 100px;
+    border-bottom-right-radius: 100px;
+}
+
+div#contenedorLinks > div#chats > a.inactive{
+    -webkit-border-bottom-right-radius: 100px;
+    -moz-border-radius-bottomright: 100px;
+    border-bottom-right-radius: 100px;
+}
+
+div#contenedorLinks > div#chats > a.active{
+    color: rgb(224, 224, 224);
+    background: var(--color-primario);
+    -webkit-border-bottom-right-radius: 100px;
+    -moz-border-radius-bottomright: 100px;
+    border-bottom-right-radius: 100px;
+}
+
+div#contenedorLinks > div#avisos > a.active{
+    color: rgb(224, 224, 224);
+    background: var(--color-primario);
+}
+
+div#contenedorLinks > div#perfil > a.active{
+    color: rgb(224, 224, 224);
+    background: var(--color-primario);
+    -webkit-border-bottom-left-radius: 100px;
+    -moz-border-radius-bottomleft: 100px;
+    border-bottom-left-radius: 100px;
+}
+
+div#contenedorLinks > div > a{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    padding-inline: 10%;
+    align-items: center;
+    justify-content: space-evenly;
+    text-decoration: none;
+    font-size: 1.3em;
+}

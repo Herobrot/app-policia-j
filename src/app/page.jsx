@@ -9,13 +9,13 @@ export default function Inicio() {
     const [badgeNumber, setBadgeNumber] = useState('');
     const [password, setPassword] = useState('');
     const handleInputChangeBadge = (e) => {
-        setBadgeNumber({badgeNumber: e.target.value})
+        setBadgeNumber(e.target.value)
     }
     const handleInputChangePassword = (e) => {
-        setPassword({password: e.target.value})
+        setPassword(e.target.value)
     }
 
-    const login = () =>{
+    const login = async () =>{
         Swal.fire({
             title: 'Cargando...',
             allowOutsideClick: false,
@@ -27,9 +27,7 @@ export default function Inicio() {
         })
         
         try{
-            console.log({badgeNumber, password});
-            console.log(JSON.stringify({badgeNumber, password}));
-            fetch('https://api-police-j.onrender.com/users/user', {
+            await fetch(process.env.NEXT_PUBLIC_API_URL + 'users/user', {
             method:'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -45,9 +43,24 @@ export default function Inicio() {
             if(response.ok){
                 Swal.close();
                 const data = await response.json();
-                console.log(data);
-                saveAuthData(data.token, data.userFound._id);
-                window.location = '/chats';
+                if(data){
+                    console.log(data);                    
+                    localStorage.setItem('userProfile', JSON.stringify(data));
+                    window.location = '/chats';
+                }
+                else{
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'El usuario no fue encontrado',
+                        text: 'Intente nuevamente',
+                    })
+                }
+            } else if(response.status === 429){
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Demasiados intentos!',
+                    text: 'Se ha superado el límite de intentos. Intente nuevamente en 30 segundos',
+                })
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -63,9 +76,6 @@ export default function Inicio() {
     }
     return(
         <main>
-            <Link href="/">
-                
-            </Link>
             <div id="contenedorLogin">
                 <div id="login">
                     <h1>COM-POL</h1>

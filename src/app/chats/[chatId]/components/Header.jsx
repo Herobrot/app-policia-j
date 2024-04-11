@@ -1,9 +1,12 @@
+"use client"
+
 import "./Header.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons"
 import Link from "next/link";
 
-export default function Header({chat}) {
+export default function Header() {
+    const chat = (localStorage.getItem("userFullName"))
     return(
         <header>
             <div className="col1">
@@ -12,8 +15,8 @@ export default function Header({chat}) {
                 </Link>
             </div>
             <div className="col2">
-                <b>{chat.nombreCompleto}</b>
-                <p>{chat.estatus}</p>
+                <b>{chat}</b> <br />
+                <span>Policía</span>
             </div>
         </header>
     )

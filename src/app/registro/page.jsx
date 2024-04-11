@@ -140,22 +140,23 @@ export default function Registro() {
                         name: name,
                         lastName: lastName,
                         badgeNumber: badgeNumber,
-                        password: badgeNumber, 
+                        password: password, 
                         role: role
                     }
                     try {
-                        fetch("https://api-police-j.onrender.com/users", {
+                        await fetch(process.env.NEXT_PUBLIC_API_URL + "users", {
                             method: "POST",
                             headers: {
                                 'Content-Type': 'application/json',
                             },
                             body: JSON.stringify(item)})
                             .then(async (res) => {                                            
-                                if (res.ok) {
+                                if (res.status === 201) {
                                     Swal.close();
                                     const result = await res.json();
                                     console.log(result);
-                                    saveAuthData(result.token,result.newUser._id)
+                                    localStorage.setItem('userProfile', JSON.stringify(result.user));
+                                    saveAuthData(result.token, result.user._id);
                                     Swal.fire({
                                         title: "¡Datos confirmados!",
                                         text: "¡Listo!, ya tiene una cuenta como " + role,
@@ -171,11 +172,16 @@ export default function Registro() {
                                         } 
                                     }).then((result) => {
                                         if(result.isConfirmed || result.isDismissed){
-                                            window.location = "/perfil"
+                                            window.location = "/chats"
                                         }
                                     })
-                                }
-                                else{
+                                } else if(res.status === 429){
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: '¡Demasiados intentos!',
+                                        text: 'Se ha superado el límite de intentos. Intente nuevamente en 30 segundos',
+                                    })
+                                } else{
                                     Swal.fire({
                                         icon: "error",
                                         title: "Ha sucedido un error al subir los datos",
@@ -185,7 +191,12 @@ export default function Registro() {
                                 }
                             })
                     } catch (error) {
-                            
+                        console.log(error);
+                        Swal.fire({
+                            icon: "error",
+                            title: "Ha sucedido un error al subir los datos",
+                            showConfirmButton: false                    
+                        });
                     }         
                 }
             })

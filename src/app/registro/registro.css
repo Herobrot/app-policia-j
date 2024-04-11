@@ -16,7 +16,7 @@ main > button{
     color: var(--color-secundario-oscuro);
     font-size: 2.5em;
     position: absolute;
-    top: 10.5%;
+    top: 11%;
     left: 5%;
     transition: color 0.1s ease-in-out;
 }

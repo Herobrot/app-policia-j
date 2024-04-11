@@ -1,0 +1,32 @@
+main{
+    display: flex;
+    height: 100svh;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(224, 224, 224);
+    position: relative;
+}
+
+main > div#buscador{
+    position: absolute;
+    top: 5%;
+    width: 85%;
+}
+
+main > div#buscador > label{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 2em;
+    color: var(--color-primario)
+}
+
+div#buscador > label > input{
+    background: none;
+    border: none;
+    width: 70%;
+    border-bottom: 1px solid var(--color-primario);
+    font-size: 0.7em;
+    color: var(--color-primario)
+}

@@ -1,17 +1,15 @@
+"use client"
+
 import "./CardChat.css"
 
-export default function CardChat({chat}) {
+export default function CardChat({key, user}) {
     return(
-        <div className="contenedorCard">
+        <div className="contenedorCard" key={key} onClick={() => {
+            sessionStorage.setItem("otherUser", user);
+            window.location.href = "/chats/"+user._id
+        }}>
             <div className="col1">
-                <b>{chat.nombreCompleto}</b>
-                <p>{chat.ultimoTexto}</p>
-            </div>
-            <div className="col2">
-                <span>{chat.ultimaFecha}</span>
-                <div className="notificacion">
-                    {chat.cantidadNuevosMensajes}
-                </div>
+                <b>{user.name+" "+user.lastName}</b>
             </div>
         </div>
     );

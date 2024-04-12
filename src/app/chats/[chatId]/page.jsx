@@ -35,9 +35,10 @@ export default function Chat() {
             else{
                 console.log("Error");
             }
-        });
+        })
+        const otherUser = sessionStorage.getItem('otherUser');
 
-        fetch(process.env.NEXT_PUBLIC_API_URL + `messages/user/${authData._idChat}`, {
+        fetch(process.env.NEXT_PUBLIC_API_URL + `messages/user/${otherUser._id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -58,7 +59,7 @@ export default function Chat() {
 
         if(messages && otherMessages){
             const sortToDate = [...messages, ...otherMessages];            
-            setAllMessages(sortToDate.sort((a, b) => new Date(a.date) - new Date(b.date)));
+            setAllMessages(sortToDate.toSorted((a, b) => new Date(a.date) - new Date(b.date)));
         }
         const newSocket = new WebSocket(process.env.NEXT_PUBLIC_API_WS);
     

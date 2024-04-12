@@ -45,7 +45,7 @@ export default function Inicio() {
                 const data = await response.json();
                 if(data){
                     console.log(data);                    
-                    localStorage.setItem('userProfile', JSON.stringify(data));
+                    saveAuthData(data.token, data.userFound._id);
                     window.location = '/chats';
                 }
                 else{

@@ -21,25 +21,30 @@ export default function Menu() {
         }
     ]);
     const [page, setPage] = useState(1);
+    const [userLogin, setUserLogin] = useState({});
 
-    const pagination = (btnValue) => {
-        const users = fetch(process.env.NEXT_PUBLIC_API_URL + 'users' + '?page=' + page, {
+    const pagination = async (btnValue) => {
+        let newPage = page;
+        if(page > 1 && btnValue === "prev") {
+            newPage -= 1;
+        }
+        
+        else if((users !== 0 || users !== undefined || users !== null) && btnValue === "next") {
+            newPage += 1;
+        }
+        setPage(newPage);
+
+        await fetch(process.env.NEXT_PUBLIC_API_URL + 'users/roles/' + userLogin.role + '?page=' + newPage
+                + '&_id=' + userLogin._id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }
-        })
-
-        if(page > 1 && btnValue === "prev") {
-            setPage(page - 1);
-        }
-
-        else if((users !== 0 || users !== undefined || users !== null) && btnValue === "next") {
-            setPage(page + 1);
-        }
-
-        setUsers(users);
-        
+        }).then(async(response) => {
+            const usersTemp = await response.json();
+            console.log(usersTemp);
+            setUsers(usersTemp);
+        });
     }
 
     useEffect(() => {
@@ -52,19 +57,16 @@ export default function Menu() {
                 if(localStorage.getItem("_idUser") == null) {
                     window.location.href = "/"            
                 }
-                const userId = JSON.parse(localStorage.getItem("_idUser"));
-    
-                const user = await fetch (process.env.NEXT_PUBLIC_API_URL + 'users/' + userId, {
+
+                const user = await fetch (process.env.NEXT_PUBLIC_API_URL + 'users/' + localStorage.getItem("_idUser"), {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': JSON.parse(localStorage.getItem("token"))
-                    }
-                })
+                        'Authorization': localStorage.getItem("token")
+                    }}).then((response) => response.json());
+                setUserLogin(user);
 
-                console.log(user);
-    
-                fetch(process.env.NEXT_PUBLIC_API_URL + 'users' + user.role + '?page=1', {
+                fetch(process.env.NEXT_PUBLIC_API_URL + 'users/roles/' + user.role + '?page=1&_id=' + user._id, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
@@ -83,7 +85,7 @@ export default function Menu() {
         }
         fetchData();
     }, []);
-    console.log(users);
+
     return (        
       <main>
           <div id="buscador">
@@ -94,7 +96,7 @@ export default function Menu() {
           </div>
           <div id="contenedorChats">
               {users ? users.map((user) => 
-                <CardChat key={user._id} user={user} />) : <p>No hay chats</p>}
+                <CardChat user={user} />) : <p>No hay chats</p>}
               <div id="paginacion">
                   <button id="btnAnterior" onClick={() => pagination("prev")}>Anterior</button>
                   <button id="btnSiguiente" onClick={() => pagination("next")}>Siguiente</button>

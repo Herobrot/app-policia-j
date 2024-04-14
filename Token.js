@@ -1,13 +1,13 @@
 export function saveAuthData(token, _idUser) {
-    localStorage.setItem('token', token);
-    localStorage.setItem('_idUser', _idUser);
+    sessionStorage.setItem('token', token);
+    sessionStorage.setItem('_idUser', _idUser);
   }
   
 
   export function getAuthData() {
     try {
-      const token = localStorage.getItem('token');
-      const _idUser = localStorage.getItem('_idUser');
+      const token = sessionStorage.getItem('token');
+      const _idUser = sessionStorage.getItem('_idUser');
       return { token, _idUser }
     }  catch (error) {
       const token = "";
@@ -18,8 +18,8 @@ export function saveAuthData(token, _idUser) {
  
   export function clearAuthData() {
     try {
-      localStorage.removeItem('token');
-      localStorage.removeItem('_idUser');
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('_idUser');
     } catch (error) {
       throw new Error("Objetos no encontrados para remover");
     }

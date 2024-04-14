@@ -17,70 +17,66 @@ export default function Chat() {
     const [inputMessage, setInputMessage] = useState('');
 
     useEffect(() => {
-        fetch(process.env.NEXT_PUBLIC_API_URL + `messages/user/${authData._idUser}`, {
+        fetch(process.env.NEXT_PUBLIC_API_URL + 'users/messages/user/' + authData._idUser, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }
         })
         .then(async (res) => {
-            if (res.ok) {
+            try{
                 const data = await res.json();
                 console.log(data);
-                const mensajes = data.map((mess) => ({ text: mess.message, 
-                    type: 'sent' }));
+                const mensajes = data.map((mess) => ({ message: mess.message, 
+                    type: 'sent', date : mess.date }));
                 setMessages(mensajes);
-                console.log(mensajes);
-            }
-            else{
-                console.log("Error");
+            } catch (error) {
+                console.log(error);
             }
         })
-        const otherUser = sessionStorage.getItem('otherUser');
+        const otherUser = JSON.parse(sessionStorage.getItem('otherUser'));
 
-        fetch(process.env.NEXT_PUBLIC_API_URL + `messages/user/${otherUser._id}`, {
+        fetch(process.env.NEXT_PUBLIC_API_URL + 'users/messages/user/' + otherUser._id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }
         }).then(async (res) => {
-            if (res.ok) {
+            try{
                 const data = await res.json();
                 console.log(data);
-                const mensajes = data.map((mess) => ({ text: mess.message, 
-                    type: 'received' }));
+                const mensajes = data.map((mess) => ({ message: mess.message, 
+                    type: 'received', date : mess.date }));
                 setOtherMessages(mensajes);
-                console.log(mensajes);
-            }
-            else{
-                console.log("Error");
-            }
-        })
+            } catch (error) {
+                console.log(error);
+            }        
+        });
 
-        if(messages && otherMessages){
-            const sortToDate = [...messages, ...otherMessages];            
-            setAllMessages(sortToDate.toSorted((a, b) => new Date(a.date) - new Date(b.date)));
-        }
+        setAllMessages([...messages, ...otherMessages].sort((a, b) => new Date(a.date) - new Date(b.date)));
+
         const newSocket = new WebSocket(process.env.NEXT_PUBLIC_API_WS);
     
         newSocket.onopen = () => {
-            console.log("Conexión WebSocket abierta")
-            const connectionMessage = { type: 'connection', clientId: authData._idUser };
-            newSocket.send(JSON.stringify(connectionMessage));};
-            newSocket.onmessage = (event) => {
-                try {
-                  
-                    const data = JSON.parse(event.data);
-                    console.log('Mensaje parseado como JSON:', data);
-            
-                    setMessages(prev => [...prev, { text: data.text, type: 'received' }]);
-                } catch (error) {
-                   
-                    console.log('Mensaje como texto plano:', event.data);
-                    setMessages(prev => [...prev, { text: event.data, type: 'received' }]);
-                }
-            };
-            
+            console.log("Conexión WebSocket abierta");
+            const connectionMessage = { type: 'connection', _idUser: authData._idUser };
+            newSocket.send(JSON.stringify(connectionMessage));
+        };
+
+        newSocket.onmessage = (event) => {
+            try {
+                
+                const data = JSON.parse(Buffer.from(JSON.parse(event.data)).toString('utf-8'));
+                console.log(data);
+        
+                setAllMessages(prev => [...prev, { message: data.message, type: (data._idUser === authData._idUser ? 'sent' : 'received') }]);
+            } catch (error) {
+               
+                console.log('Mensaje como texto plano:', event.data);
+                setAllMessages(prev => [...prev, { message: event.data, type: 'received' }]);
+            }
+        };
+        
         
         newSocket.onerror = (event) => console.error("Error en WebSocket", event);
         newSocket.onclose = (event) => {
@@ -90,24 +86,36 @@ export default function Chat() {
         setSocket(newSocket);
         setSocketBool(true);
 
+        const scroll = document.getElementById('scroll');
+
+        setTimeout(function() {
+            scroll.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }, 800);
+
         return () => newSocket.close();
     }, []);
+
+    useEffect(() => {
+        const messagesToSort = [...messages, ...otherMessages];     
+                   
+        setAllMessages(messagesToSort.sort((a, b) => b.date - a.date));
+    }, [messages])
+
+    useEffect(() => {
+        const messagesToSort = [...messages, ...otherMessages];
+        setAllMessages(messagesToSort.sort((a, b) => b.date - a.date));
+    }, [otherMessages])
 
     const sendMessage = async () => {
         if (socket && inputMessage) {
             const messageToSend = {
-                type: 'message',
-                text: inputMessage,
-                _idUser: authData._idUser,
-                message: {
-                    message: inputMessage,
-                    date: new Date,
-                    _idUser: authData._idUser
-                }
+                message: inputMessage,
+                date: new Date,
+                _idUser: authData._idUser
             };
     
             socket.send(JSON.stringify(messageToSend));
-            setMessages(prev => [...prev, { text: inputMessage, type: 'sent' }]);
+            setAllMessages(prev => [...prev, { message: inputMessage, type: 'sent' }]);
             setInputMessage('');
         }
         const scroll = document.getElementById('scroll');

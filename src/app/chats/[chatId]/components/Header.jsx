@@ -6,7 +6,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons"
 import Link from "next/link";
 
 export default function Header() {
-    const chat = (localStorage.getItem("userFullName"))
+    const chat = (sessionStorage.getItem("userFullName"))
     return(
         <header>
             <div className="col1">

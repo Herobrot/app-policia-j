@@ -13,16 +13,16 @@ export default function Perfil() {
     const [role, setRole] = useState("");
 
     useEffect(() => {
-        if(localStorage.getItem("token") == null) {
+        if(sessionStorage.getItem("token") == null) {
             window.location.href = "/"
         }
 
         else{
-            if(localStorage.getItem("userId") == null || localStorage.getItem("userProfile") == null) {
+            if(sessionStorage.getItem("userId") == null || sessionStorage.getItem("userProfile") == null) {
                 window.location.href = "/"            
             }
 
-            const profile = JSON.parse(localStorage.getItem("userProfile"));
+            const profile = JSON.parse(sessionStorage.getItem("userProfile"));
             if(!name || !lastName || !role || !badgeNumber || !password){
                 setName(profile.name);
                 setLastName(profile.lastName);
@@ -35,7 +35,7 @@ export default function Perfil() {
     })
 
     const saveChanges = async() => {
-        const _id = JSON.parse(localStorage.getItem("userProfile"))._id;
+        const _id = JSON.parse(sessionStorage.getItem("userProfile"))._id;
 
         await fetch(process.env.NEXT_PUBLIC_API_URL + 'users/' + _id, {
             method:'PUT',
@@ -56,7 +56,7 @@ export default function Perfil() {
             if(res.ok){
                 const data = await res.json();
                 console.log(data);
-                localStorage.setItem("userProfile", JSON.stringify(data));
+                sessionStorage.setItem("userProfile", JSON.stringify(data));
                 Swal.fire({
                     icon: "success",
                     title: "Datos guardados"

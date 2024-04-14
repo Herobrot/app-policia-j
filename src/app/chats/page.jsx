@@ -49,20 +49,20 @@ export default function Menu() {
 
     useEffect(() => {
         const fetchData = async () => {
-            if(localStorage.getItem("token") == null) {
+            if(sessionStorage.getItem("token") == null) {
                 window.location.href = "/"
             }
     
             else{
-                if(localStorage.getItem("_idUser") == null) {
+                if(sessionStorage.getItem("_idUser") == null) {
                     window.location.href = "/"            
                 }
 
-                const user = await fetch (process.env.NEXT_PUBLIC_API_URL + 'users/' + localStorage.getItem("_idUser"), {
+                const user = await fetch (process.env.NEXT_PUBLIC_API_URL + 'users/' + sessionStorage.getItem("_idUser"), {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': localStorage.getItem("token")
+                        'Authorization': sessionStorage.getItem("token")
                     }}).then((response) => response.json());
                 setUserLogin(user);
 

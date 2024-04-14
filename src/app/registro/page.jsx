@@ -155,7 +155,7 @@ export default function Registro() {
                                     Swal.close();
                                     const result = await res.json();
                                     console.log(result);
-                                    localStorage.setItem('userProfile', JSON.stringify(result.user));
+                                    sessionStorage.setItem('userProfile', JSON.stringify(result.user));
                                     saveAuthData(result.token, result.user._id);
                                     Swal.fire({
                                         title: "¡Datos confirmados!",

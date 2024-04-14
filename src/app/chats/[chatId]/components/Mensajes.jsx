@@ -7,7 +7,7 @@ export default function Mensajes({data}){
                 <div className={`${message.type === 'sent' ? 'sent' : 'received'}`}
                     key={index}
                     id="message">
-                        {message.text}
+                        {message.message}
                 </div>
             ))}
         </>

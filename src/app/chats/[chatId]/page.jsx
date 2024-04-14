@@ -6,6 +6,7 @@ import { faChevronLeft, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { faPaperPlane } from "@fortawesome/free-regular-svg-icons";
 import Mensajes from './components/Mensajes';
 import { getAuthData } from '../../../../Token';
+import ReconnectingWebSocket from 'reconnecting-websocket';
 
 export default function Chat() {
     const authData = getAuthData();
@@ -15,8 +16,15 @@ export default function Chat() {
     const [otherMessages, setOtherMessages] = useState([]);
     const [allMessages, setAllMessages] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
+    const optionsWs = {
+        WebSocket: WebSocket,
+        connectionTimeout: 10000,
+        maxRetries: 5
+    }
 
-    useEffect(() => {
+    const rNewSocket = new ReconnectingWebSocket(process.env.NEXT_PUBLIC_API_WS, [], optionsWs);
+
+    const connecting = () => {
         fetch(process.env.NEXT_PUBLIC_API_URL + 'users/messages/user/' + authData._idUser, {
             method: 'GET',
             headers: {
@@ -54,36 +62,39 @@ export default function Chat() {
         });
 
         setAllMessages([...messages, ...otherMessages].sort((a, b) => new Date(a.date) - new Date(b.date)));
-
-        const newSocket = new WebSocket(process.env.NEXT_PUBLIC_API_WS);
     
-        newSocket.onopen = () => {
+        rNewSocket.onopen = () => {
             console.log("Conexión WebSocket abierta");
             const connectionMessage = { type: 'connection', _idUser: authData._idUser };
-            newSocket.send(JSON.stringify(connectionMessage));
+            rNewSocket.send(JSON.stringify(connectionMessage));
+            connecting();
+            
         };
 
-        newSocket.onmessage = (event) => {
+        rNewSocket.onmessage = (event) => {
             try {
                 
                 const data = JSON.parse(Buffer.from(JSON.parse(event.data)).toString('utf-8'));
                 console.log(data);
         
                 setAllMessages(prev => [...prev, { message: data.message, type: (data._idUser === authData._idUser ? 'sent' : 'received') }]);
+                const scroll = document.getElementById('scroll');
+
+                setTimeout(function() {
+                    scroll.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                }, 200);
             } catch (error) {
-               
-                console.log('Mensaje como texto plano:', event.data);
-                setAllMessages(prev => [...prev, { message: event.data, type: 'received' }]);
+                console.log("Hubo un error al decodificar el mensaje:", error);
             }
         };
         
         
-        newSocket.onerror = (event) => console.error("Error en WebSocket", event);
-        newSocket.onclose = (event) => {
-            console.log("Conexión WebSocket cerrada", event)
+        rNewSocket.onerror = (event) => console.error("Error en WebSocket", event);
+        rNewSocket.onclose = (event) => {
+            console.log("Conexión WebSocket cerrada, intentando conectarse...");
         };
     
-        setSocket(newSocket);
+        setSocket(rNewSocket);
         setSocketBool(true);
 
         const scroll = document.getElementById('scroll');
@@ -92,7 +103,13 @@ export default function Chat() {
             scroll.scrollIntoView({ behavior: 'smooth', block: 'end' });
         }, 800);
 
-        return () => newSocket.close();
+        return () => rNewSocket.close();
+    }
+
+    useEffect(() => {
+
+        connecting();
+
     }, []);
 
     useEffect(() => {

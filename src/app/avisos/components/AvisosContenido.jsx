@@ -1,31 +1,44 @@
 import React, { useEffect, useState } from "react";
 import Aviso from "./Aviso.jsx";
+import { getAuthData } from "../../../../Token";
 
 export default function Avisos() {
-    const [avisosArreglo, setAvisosArreglo] = useState([{}]);
+    const authData = getAuthData();
+    const [avisosArreglo, setAvisosArreglo] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const response = await fetch(process.env.NEXT_PUBLIC_API_URL + 'warnings/Policía', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if (response.ok) {
+            fetch(process.env.NEXT_PUBLIC_API_URL + 'users/' + authData._idUser, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }            
+            }).then(async (res) => {
+                const user = await res.json();
+                try {
+                    const response = await fetch(process.env.NEXT_PUBLIC_API_URL + 'warnings/users/' + user._id, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
                     const data = await response.json();
                     console.log(data)
                     setAvisosArreglo(data);
+                } catch (error) {
+                    console.error("Error al tratar de conseguir las advertencias:", error);
+                } finally{
+                    fetchData();
                 }
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
+            }).catch((error) => {
+                console.error("Error al obtener el usuario:", error);
+            }).finally(() => {
+                fetchData();
+            })
+            
         };
 
-        const interval = setInterval(fetchData, 15000);
-
-        return () => clearInterval(interval);
+        fetchData();
     }, []);
     
     return (
